@@ -13,5 +13,9 @@
   "license": "MIT",
   "devDependencies": {
     "rescript": "^9.1.1"
+  },
+  "dependencies": {
+    "pta": "^0.2.3",
+    "zora": "^4.1.0"
   }
 }
