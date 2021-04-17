@@ -2,7 +2,7 @@
 
 
 function $$default(t) {
-  t.equal(42, 43, "answer should be 42");
+  t.equal(42, 42, "answer should be 42");
   
 }
 
