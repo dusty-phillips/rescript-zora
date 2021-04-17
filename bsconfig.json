@@ -1,8 +1,11 @@
 {
   "name": "rescript-zora",
   "version": "0.1.0",
-  "sources": {
-    "dir" : "src",
-    "subdirs" : true
-  }
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    { "dir": "tests", "subdirs": true }
+  ]
 }
