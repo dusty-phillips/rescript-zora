@@ -4,6 +4,9 @@ type testTitle = string
 type testMessage = string
 
 @send external test: (zora, testTitle, zoraTest) => unit = "test"
+@send external skip: (zora, testTitle, zoraTest) => unit = "skip"
+@send external only: (zora, testTitle, zoraTest) => unit = "only"
+
 @send external equal: (zora, 't, 't, testMessage) => unit = "equal"
 @send external notEqual: (zora, 't, 't, testMessage) => unit = "notEqual"
 @send external is: (zora, 't, 't, testMessage) => unit = "is"
