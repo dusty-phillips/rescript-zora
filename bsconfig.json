@@ -11,5 +11,6 @@
   "package-specs": {
     "module": "es6-global",
     "in-source": true
-  }
+  },
+  "bs-dependencies": ["@ryyppy/rescript-promise"]
 }

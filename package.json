@@ -19,6 +19,7 @@
     "rescript": "^9.1.1"
   },
   "dependencies": {
+    "@ryyppy/rescript-promise": "^2.0.0",
     "pta": "^0.2.3",
     "zora": "^4.1.0"
   }
