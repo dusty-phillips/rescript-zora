@@ -5,6 +5,7 @@
   "scripts": {
     "clean": "rescript clean",
     "build": "rescript build",
+    "format": "rescript format -all",
     "test": "npx onchange --initial '{tests,src}/*.js' -- pta",
     "watch": "rescript build -w"
   },
