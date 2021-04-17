@@ -1,9 +1,10 @@
-%%raw(`
+type zora
+type zoraTest = zora => unit
 
-import {test} from 'zora'
+@module("zora") external test: (string, zoraTest) => unit = "test"
+@send external equal: (zora, 't, 't, string) => unit = "equal"
 
-test('should result to the answer', t => {
-    const answer = 42;
-    t.equal(answer, 42, 'answer should be 42');
-});
-`)
+let default: zoraTest = t => {
+    let answer = 42;
+    t->equal(answer, 43, "answer should be 42");
+}
