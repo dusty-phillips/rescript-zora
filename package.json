@@ -1,6 +1,7 @@
 {
   "name": "rescript-zora",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "clean": "rescript clean",
     "build": "rescript build",
