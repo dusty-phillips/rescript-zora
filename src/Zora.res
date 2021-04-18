@@ -1,9 +1,12 @@
 type zora
 type zoraTest = zora => unit
+type asyncZoraTest = zora => Promise.t<unit>
 type testTitle = string
 type testMessage = string
 
-@send external test: (zora, testTitle, zoraTest) => unit = "test"
+@send external test: (zora, testTitle, asyncZoraTest) => unit = "test"
+@send external block: (zora, testTitle, zoraTest) => unit = "test"
+
 @send external skip: (zora, testTitle, zoraTest) => unit = "skip"
 @send external only: (zora, testTitle, zoraTest) => unit = "only"
 
@@ -14,3 +17,5 @@ type testMessage = string
 @send external ok: (zora, bool, testMessage) => unit = "ok"
 @send external notOk: (zora, bool, testMessage) => unit = "notOk"
 @send external fail: (zora, testMessage) => unit = "fail"
+
+let {then, resolve: done} = module(Promise)
