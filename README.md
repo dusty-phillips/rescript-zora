@@ -25,7 +25,7 @@ fastest way to get one is with `npx rescript init myproject`._
 Install [zora](https://github.com/lorenzofox3/zora) and this package:
 
 ```
-npm install --save-dev zora @dusty-phillips/rescript-zora
+npm install --save-dev @dusty-phillips/rescript-zora
 ```
 
 Add `@dusty-phillips/rescript-zora` as a dependency in your `bsconfig.json`:
@@ -125,7 +125,7 @@ The `Block` in `zoraBlock` indicates that this is a blocking test. It's faster
 to run multiple independent tests in parallel:
 
 ```rescript
-tests/standaloneParallel.res
+// tests/standaloneParallel.res
 
 open Zora
 
@@ -169,10 +169,18 @@ With these installed, you can set the `test` command in your `scripts` as follow
   "test": "npx onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
 ```
 
-This will *not* run the standalone tests, as they instead rely on a default
-export for each testing file.
+Or, if you prefer to keep your tests alongside your code in your `src` folder:
 
-You can construct one for synchronous testing as follows:
+```json
+  "test": "npx onchange --initial 'src/*.js' -- pta 'src/*.test.js'",
+```
+
+Now `npm test` will do what you expect: run a test runner and watch for file
+changes.
+
+Note that pta will *not* run the standalone tests, as it instead relies on a
+default export for each testing file. You can construct one for synchronous
+testing as follows:
 
 ```rescript
 // simple.test.res
@@ -191,7 +199,7 @@ let default: zoraTestBlock = t => {
 ```
 
 But if you like things super fast, async is the way to go (Note: the `wait()` call
-below would require you to add a dependency on `@ryppy/rescript-promise` to
+below would require you to add a dependency on `@ryyppy/rescript-promise` to
 your bs-config):
 
 ```rescript
@@ -328,8 +336,15 @@ let default: zoraTest = t => {
 }
 ```
 
+
 ## Running in the browser
 
 Zora supports running tests in the browser, but I have not tested it with this
 Rescript implementation. I am open to PRs that will make this Rescript
 implementation work in the browser if changes are required.
+
+## Source Maps
+
+The biggest problem with this library is that test failures point to the lines
+in the compiled js files instead of Rescript itself. If someone knows how to
+configure rescript and zora to use source maps, I'd love a PR.
