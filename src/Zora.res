@@ -10,8 +10,10 @@ type testMessage = string
 @send external test: (t, testTitle, zoraTest) => unit = "test"
 @send external block: (t, testTitle, zoraTestBlock) => unit = "test"
 
-@send external skip: (t, testTitle, zoraTestBlock) => unit = "skip"
-@send external only: (t, testTitle, zoraTestBlock) => unit = "only"
+@send external skip: (t, testTitle, zoraTest) => unit = "skip"
+@send external only: (t, testTitle, zoraTest) => unit = "only"
+@send external blockSkip: (t, testTitle, zoraTestBlock) => unit = "skip"
+@send external blockOnly: (t, testTitle, zoraTestBlock) => unit = "only"
 
 @send external equal: (t, 't, 't, testMessage) => unit = "equal"
 @send external notEqual: (t, 't, 't, testMessage) => unit = "notEqual"
