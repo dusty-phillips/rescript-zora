@@ -1,6 +1,6 @@
 open Zora
 
-let default: zoraTest = t => {
+let default: zoraTestBlock = t => {
   t->block("should greet", t => {
     t->ok(true, "hello world")
   })

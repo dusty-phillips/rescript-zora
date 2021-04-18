@@ -8,12 +8,12 @@ let wait = (amount: int) => {
   })
 }
 
-let default: zoraTest = t => {
+let default: zoraTestBlock = t => {
   t->block("Some Parallel Tests", t => {
     let state = ref(0)
 
     t->test("parallel 1", t => {
-      wait(100)->then(_ => {
+      wait(10)->then(_ => {
         t->equal(state.contents, 1, "parallel 2 should have incremented by now")
         state.contents = state.contents + 1
         t->equal(state.contents, 2, "parallel 1 should increment")
@@ -29,7 +29,7 @@ let default: zoraTest = t => {
     })
 
     t->test("parallel 3", t => {
-      wait(200)->Promise.then(_ => {
+      wait(20)->Promise.then(_ => {
         t->equal(state.contents, 2, "parallel 1 and 2 should have incremented by now")
         state.contents = state.contents + 1
         t->equal(state.contents, 3, "parallel 3 should increment last")

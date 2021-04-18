@@ -17,7 +17,7 @@ function $$default(t) {
             contents: 0
           };
           t.test("parallel 1", (function (t) {
-                  return Zora.$$then(wait(100), (function (param) {
+                  return Zora.$$then(wait(10), (function (param) {
                                 t.equal(state.contents, 1, "parallel 2 should have incremented by now");
                                 state.contents = state.contents + 1 | 0;
                                 t.equal(state.contents, 2, "parallel 1 should increment");
@@ -31,7 +31,7 @@ function $$default(t) {
                   return Zora.done(undefined);
                 }));
           t.test("parallel 3", (function (t) {
-                  return wait(200).then(function (param) {
+                  return wait(20).then(function (param) {
                               t.equal(state.contents, 2, "parallel 1 and 2 should have incremented by now");
                               state.contents = state.contents + 1 | 0;
                               t.equal(state.contents, 3, "parallel 3 should increment last");
