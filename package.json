@@ -14,7 +14,7 @@
   "keywords": [
     "ReScript"
   ],
-  "author": "",
+  "author": "Dusty Phillips",
   "license": "MIT",
   "devDependencies": {
     "onchange": "^7.1.0",
