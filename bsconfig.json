@@ -1,12 +1,12 @@
 {
-  "name": "rescript-zora",
+  "name": "@dusty-phillips/rescript-zora",
   "version": "0.1.0",
   "sources": [
     {
       "dir": "src",
       "subdirs": true
     },
-    { "dir": "tests", "subdirs": true }
+    { "dir": "tests", "subdirs": true, "type": "dev" }
   ],
   "package-specs": {
     "module": "es6-global",
