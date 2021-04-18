@@ -44,13 +44,13 @@ your `bsconfig.json`:
 
 ```json
   "package-specs": {
-    "module": "es6-global",
+    "module": "es6",
     "in-source": true
   },
 ```
 
-I also suggest configuring your sources in `bsconfig.json` as follows, so
-Rescript will compile your test files:
+If you like to keep your tests separate from your source code, you'll need to
+add that directory so Rescript will compile your test files:
 
 ```json
   "sources": [
@@ -66,7 +66,7 @@ So a minimal `bsconfig.json` might look like this:
 
 ```json
 {
-  "name": "@dusty-phillips/rescript-zora",
+  "name": "myproject",
   "version": "0.1.0",
   "sources": [
     {
@@ -76,10 +76,10 @@ So a minimal `bsconfig.json` might look like this:
     { "dir": "tests", "subdirs": true, "type": "dev" }
   ],
   "package-specs": {
-    "module": "es6-global",
+    "module": "es6",
     "in-source": true
   },
-  "bs-dependencies": ["@ryyppy/rescript-promise"]
+  "bs-dependencies": ["@dusty-phillips/rescript-zora"]
 }
 ```
 
