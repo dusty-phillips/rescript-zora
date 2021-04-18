@@ -38,25 +38,7 @@ function $$default(t) {
                               return Zora.done(undefined);
                             });
                 }));
-          
-        }));
-  t.test("Some Sync Tests", (function (t) {
-          var state = {
-            contents: 0
-          };
-          t.test("sync 1", (function (t) {
-                  t.equal(state.contents, 0, "sync 1 should be first to increment");
-                  for(var _for = 1; _for <= 10000; ++_for){
-                    state.contents = state.contents + 1 | 0;
-                  }
-                  t.equal(state.contents, 10000, "sync 1 should increment many times");
-                  
-                }));
-          t.test("sync 2", (function (t) {
-                  t.equal(state.contents, 10000, "sync 2 should finish after sync 1");
-                  
-                }));
-          
+          return Zora.done(undefined);
         }));
   
 }

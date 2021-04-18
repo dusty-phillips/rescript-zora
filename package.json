@@ -6,7 +6,7 @@
     "clean": "rescript clean",
     "build": "rescript build",
     "format": "rescript format -all",
-    "test": "npx onchange --initial '{tests,src}/*.js' -- pta '{tests}/*.test.js'",
+    "test": "npx onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
     "watch": "rescript build -w"
   },
   "keywords": [

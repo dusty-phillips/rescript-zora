@@ -9,7 +9,7 @@ let wait = (amount: int) => {
 }
 
 let default: zoraTestBlock = t => {
-  t->block("Some Parallel Tests", t => {
+  t->test("Some Parallel Tests", t => {
     let state = ref(0)
 
     t->test("parallel 1", t => {
@@ -36,20 +36,6 @@ let default: zoraTestBlock = t => {
         done()
       })
     })
-  })
-
-  t->block("Some Sync Tests", t => {
-    let state = ref(0)
-    t->block("sync 1", t => {
-      t->equal(state.contents, 0, "sync 1 should be first to increment")
-      for _ in 1 to 10000 {
-        state.contents = state.contents + 1
-      }
-      t->equal(state.contents, 10000, "sync 1 should increment many times")
-    })
-
-    t->block("sync 2", t => {
-      t->equal(state.contents, 10000, "sync 2 should finish after sync 1")
-    })
+    done()
   })
 }
