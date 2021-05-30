@@ -166,13 +166,13 @@ npm install --save-dev pta onchange
 With these installed, you can set the `test` command in your `scripts` as follows:
 
 ```json
-  "test": "npx onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
+  "test": "onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
 ```
 
 Or, if you prefer to keep your tests alongside your code in your `src` folder:
 
 ```json
-  "test": "npx onchange --initial 'src/*.js' -- pta 'src/*.test.js'",
+  "test": "onchange --initial 'src/*.js' -- pta 'src/*.test.js'",
 ```
 
 Now `npm test` will do what you expect: run a test runner and watch for file
@@ -295,8 +295,8 @@ commands in your `package.json` scripts, one for local only development and one
 for CI:
 
 ```json
-"test": "npx onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
-"test:only": "npx onchange --initial '{tests,src}/*.js' -- pta --only 'tests/*.test.js'",
+"test": "onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
+"test:only": "onchange --initial '{tests,src}/*.js' -- pta --only 'tests/*.test.js'",
 "test:ci": "pta 'tests/*.test.js'",
 ```
 
