@@ -23,22 +23,18 @@ type testMessage = string
 @send external notOk: (t, bool, testMessage) => unit = "notOk"
 @send external fail: (t, testMessage) => unit = "fail"
 
-module Option = {
-  let none = (zora: t, actual: option<'t>, message: testMessage) => {
-    zora->ok(actual->Belt.Option.isNone, message)
-  }
-  let some = (zora: t, actual: option<'t>, message: testMessage) => {
-    zora->ok(actual->Belt.Option.isSome, message)
-  }
+let optionNone = (zora: t, actual: option<'t>, message: testMessage) => {
+  zora->ok(actual->Belt.Option.isNone, message)
+}
+let optionSome = (zora: t, actual: option<'t>, message: testMessage) => {
+  zora->ok(actual->Belt.Option.isSome, message)
 }
 
-module Result = {
-  let error = (zora: t, actual: Belt.Result.t<'t, 'b>, message: testMessage) => {
-    zora->ok(actual->Belt.Result.isError, message)
-  }
-  let ok = (zora: t, actual: Belt.Result.t<'t, 'b>, message: testMessage) => {
-    zora->ok(actual->Belt.Result.isOk, message)
-  }
+let resultError = (zora: t, actual: Belt.Result.t<'t, 'b>, message: testMessage) => {
+  zora->ok(actual->Belt.Result.isError, message)
+}
+let resultOk = (zora: t, actual: Belt.Result.t<'t, 'b>, message: testMessage) => {
+  zora->ok(actual->Belt.Result.isOk, message)
 }
 
 let {then, resolve: done} = module(Promise)

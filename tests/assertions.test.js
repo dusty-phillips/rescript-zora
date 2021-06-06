@@ -18,13 +18,13 @@ function $$default(t) {
   t.equal(x, z, "Object is deep equal");
   t.ok(true, "boolean is ok");
   t.notOk(false, "boolean is not ok");
-  Zora.$$Option.none(t, undefined, "None is None");
-  Zora.$$Option.some(t, Caml_option.some(x), "option is Some");
-  Zora.Result.error(t, {
+  Zora.optionNone(t, undefined, "None is None");
+  Zora.optionSome(t, Caml_option.some(x), "option is Some");
+  Zora.resultError(t, {
         TAG: /* Error */1,
         _0: x
       }, "Is Error Result");
-  Zora.Result.ok(t, {
+  Zora.resultOk(t, {
         TAG: /* Ok */0,
         _0: x
       }, "Is Ok Result");

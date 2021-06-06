@@ -12,9 +12,9 @@ let default: zoraTest = t => {
   t->equal(x, z, "Object is deep equal")
   t->ok(true, "boolean is ok")
   t->notOk(false, "boolean is not ok")
-  t->Option.none(None, "None is None")
-  t->Option.some(Some(x), "option is Some")
-  t->Result.error(Belt.Result.Error(x), "Is Error Result")
-  t->Result.ok(Belt.Result.Ok(x), "Is Ok Result")
+  t->optionNone(None, "None is None")
+  t->optionSome(Some(x), "option is Some")
+  t->resultError(Belt.Result.Error(x), "Is Error Result")
+  t->resultOk(Belt.Result.Ok(x), "Is Ok Result")
   done()
 }
