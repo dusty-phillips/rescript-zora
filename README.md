@@ -348,3 +348,11 @@ implementation work in the browser if changes are required.
 The biggest problem with this library is that test failures point to the lines
 in the compiled js files instead of Rescript itself. If someone knows how to
 configure rescript and zora to use source maps, I'd love a PR.
+
+## Contributing
+
+PRs are welcome.
+
+## Releasing
+
+`npx np`
