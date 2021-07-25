@@ -19,7 +19,10 @@ function $$default(t) {
   t.ok(true, "boolean is ok");
   t.notOk(false, "boolean is not ok");
   Zora.optionNone(t, undefined, "None is None");
-  Zora.optionSome(t, Caml_option.some(x), "option is Some");
+  Zora.optionSome(t, Caml_option.some(x), (function (t, n) {
+          t.equal(n.hello, "world", "option should be hello world");
+          
+        }));
   Zora.resultError(t, {
         TAG: /* Error */1,
         _0: x
@@ -27,7 +30,10 @@ function $$default(t) {
   Zora.resultOk(t, {
         TAG: /* Ok */0,
         _0: x
-      }, "Is Ok Result");
+      }, (function (t, n) {
+          t.equal(n.hello, "world", "Is Ok Result");
+          
+        }));
   return Zora.done(undefined);
 }
 

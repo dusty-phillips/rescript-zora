@@ -306,7 +306,8 @@ for CI:
 This library models all the default assertions provided by Zora except for
 those dealing with raising exceptions, which don't map neatly to Rescript
 exceptions.  There are additional bindings for checking if a Rescript `option`
-is `Some()` or `None` or if a `Belt.Result` is `Ok()` or `Error()`.
+is `Some()` or `None` or if a `Belt.Result` is `Ok()` or `Error()` and asserting
+on the value therein.
 
 In the interest of avoiding bloat, I do not intend to add a lot of other
 Rescript-specific assertions.
@@ -328,10 +329,10 @@ let default: zoraTest = t => {
   t->equal(x, z, "Object is deep equal")
   t->ok(true, "boolean is ok")
   t->notOk(false, "boolean is not ok")
-  t->Option.none(None, "None is None")
-  t->Option.some(Some(x), "option is Some")
-  t->Result.error(Belt.Result.Error(x), "Is Error Result")
-  t->Result.ok(Belt.Result.Ok(x), "Is Ok Result")
+  t->optionNone(None, "None is None")
+  t->optionSome(Some(x), (t, n) => t->equal(n["hello"], "world", "option should be hello world"))
+  t->resultError(Belt.Result.Error(x), "Is Error Result")
+  t->resultOk(Belt.Result.Ok(x), (t, n) => t->equal(n["hello"], "world", "Is Ok Result"))
   done()
 }
 ```

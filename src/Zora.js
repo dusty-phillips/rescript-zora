@@ -3,15 +3,20 @@
 import * as Curry from "../node_modules/rescript/lib/es6/curry.js";
 import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "../node_modules/rescript/lib/es6/belt_Result.js";
+import * as Caml_option from "../node_modules/rescript/lib/es6/caml_option.js";
 
 function optionNone(zora, actual, message) {
   zora.ok(Belt_Option.isNone(actual), message);
   
 }
 
-function optionSome(zora, actual, message) {
-  zora.ok(Belt_Option.isSome(actual), message);
-  
+function optionSome(zora, actual, check) {
+  if (actual !== undefined) {
+    return Curry._2(check, zora, Caml_option.valFromOption(actual));
+  } else {
+    zora.fail("Expected Some value, got None");
+    return ;
+  }
 }
 
 function resultError(zora, actual, message) {
@@ -19,8 +24,11 @@ function resultError(zora, actual, message) {
   
 }
 
-function resultOk(zora, actual, message) {
-  zora.ok(Belt_Result.isOk(actual), message);
+function resultOk(zora, actual, check) {
+  if (actual.TAG === /* Ok */0) {
+    return Curry._2(check, zora, actual._0);
+  }
+  zora.fail("Expected ok value, got error");
   
 }
 

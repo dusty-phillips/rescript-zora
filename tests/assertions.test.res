@@ -13,8 +13,8 @@ let default: zoraTest = t => {
   t->ok(true, "boolean is ok")
   t->notOk(false, "boolean is not ok")
   t->optionNone(None, "None is None")
-  t->optionSome(Some(x), "option is Some")
+  t->optionSome(Some(x), (t, n) => t->equal(n["hello"], "world", "option should be hello world"))
   t->resultError(Belt.Result.Error(x), "Is Error Result")
-  t->resultOk(Belt.Result.Ok(x), "Is Ok Result")
+  t->resultOk(Belt.Result.Ok(x), (t, n) => t->equal(n["hello"], "world", "Is Ok Result"))
   done()
 }

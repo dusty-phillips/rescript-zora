@@ -23,18 +23,24 @@ type testMessage = string
 @send external notOk: (t, bool, testMessage) => unit = "notOk"
 @send external fail: (t, testMessage) => unit = "fail"
 
-let optionNone = (zora: t, actual: option<'t>, message: testMessage) => {
+let optionNone = (zora: t, actual: option<'a>, message: testMessage) => {
   zora->ok(actual->Belt.Option.isNone, message)
 }
-let optionSome = (zora: t, actual: option<'t>, message: testMessage) => {
-  zora->ok(actual->Belt.Option.isSome, message)
+let optionSome = (zora: t, actual: option<'a>, check: (t, 'a) => unit) => {
+  switch actual {
+  | None => zora->fail("Expected Some value, got None")
+  | Some(value) => zora->check(value)
+  }
 }
 
-let resultError = (zora: t, actual: Belt.Result.t<'t, 'b>, message: testMessage) => {
+let resultError = (zora: t, actual: Belt.Result.t<'a, 'b>, message: testMessage) => {
   zora->ok(actual->Belt.Result.isError, message)
 }
-let resultOk = (zora: t, actual: Belt.Result.t<'t, 'b>, message: testMessage) => {
-  zora->ok(actual->Belt.Result.isOk, message)
+let resultOk = (zora: t, actual: Belt.Result.t<'a, 'b>, check: (t, 'a) => unit) => {
+  switch actual {
+  | Belt.Result.Error(_) => zora->fail("Expected ok value, got error")
+  | Belt.Result.Ok(value) => zora->check(value)
+  }
 }
 
 let {then, resolve: done} = module(Promise)
