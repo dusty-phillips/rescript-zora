@@ -355,4 +355,7 @@ PRs are welcome.
 
 ## Releasing
 
-`npx np`
+This is for my reference
+
+* update the version in `bsconfig.json`
+* `npx np`
