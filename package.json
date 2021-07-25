@@ -19,11 +19,11 @@
   "license": "MIT",
   "devDependencies": {
     "onchange": "^7.1.0",
-    "rescript": "^9.1.1"
+    "rescript": "^9.1.4"
   },
   "dependencies": {
-    "@ryyppy/rescript-promise": "^2.0.0",
+    "@ryyppy/rescript-promise": "^2.1.0",
     "pta": "^0.2.3",
-    "zora": "^4.1.0"
+    "zora": "^5.0.0"
   }
 }
