@@ -12,10 +12,11 @@ niceties to help work with Rescript promises and the standard library.
 
 ## Beta software alert
 
-This package is so beta that it depends on the as-yet-unreleased [Rescript
-9.1.1](https://www.npmjs.com/package/rescript) toolchain and the new
+This package depends on the new
 [Promises](https://github.com/ryyppy/rescript-promise) proposal that hasn't
 been integrated into the Rescript standard library.
+
+I'm still tweaking the api a bit, so expect breakage.
 
 ## Installation
 
@@ -37,7 +38,7 @@ Add `@dusty-phillips/rescript-zora` as a dependency in your `bsconfig.json`:
 ## Suggested configuration
 
 I've only tested the package with es6-style modules, so you may want to add
-`"type": "module"` to your `package.json`. 
+`"type": "module"` to your `package.json`.
 
 You'll probably also want to add the following `package-specs` configuration to
 your `bsconfig.json`:
@@ -88,7 +89,7 @@ So a minimal `bsconfig.json` might look like this:
 The simplest possible Zora test looks like this:
 
 ```rescript
-// tests/standalone.res
+// tests/simple.test.res
 open Zora
 
 zoraBlock("should run a test synchronously", t => {
@@ -97,7 +98,7 @@ zoraBlock("should run a test synchronously", t => {
 })
 ```
 
-Building this with rescript will output a `tests/standalone.js` file that
+Building this with rescript will output a `tests/simple.test.js` file that
 you can run directly with `node`:
 
 ```tap
@@ -118,6 +119,26 @@ ok 2 - Should be a tasty dessert
 This output is in [Test Anything Protocol](https://testanything.org/) format.
 The [zora docs](https://github.com/lorenzofox3/zora) go into more detail on how
 it works with Zora.
+
+## Combining tests
+
+You can include multiple `zoraBlock` statemens, or you can pass the `t` value
+into the `block` function:
+
+```rescript
+open Zora
+
+zoraBlock("Should run some simple blocking tests", t => {
+  t->block("should greet", t => {
+    t->ok(true, "hello world")
+  })
+
+  t->block("should answer question", t => {
+    let answer = 42
+    t->equal(answer, 42, "should be 42")
+  })
+})
+```
 
 ## Running tests in parallel (async)
 
@@ -142,7 +163,7 @@ zora("should run a second test at the same time", t => {
 })
 ```
 
-Note the absence of `Blocking`, and the presence of `done()`. Under the hood,
+Note the absence of `zoraBlock`, and the presence of `done()`. Under the hood,
 this is returning a [Rescript
 Promise](https://github.com/ryyppy/rescript-promise), and you can call
 `Promise.then` and friends inside the test if necessary. The `done()` at the
@@ -150,13 +171,65 @@ end is a more legible alias for `Promise.resolve` that is reexported in Zora.
 It is necessary because all promises in the rescript-promise library must
 return a promise.
 
+## Combining parallel tests
+
+You can nest parallel tests inside a blocking or non-blocking test, and
+run blocking tests alongside parallel tests:
+
+```rescript
+// parallel.test.res
+open Zora
+
+let wait = (amount: int) => {
+  Promise.make((resolve, _) => {
+    Js.Global.setTimeout(_ => {
+      resolve(. Js.undefined)
+    }, amount)->ignore
+  })
+}
+
+zora("Some Parallel Tests", t => {
+  let state = ref(0)
+
+  t->test("parallel 1", t => {
+    wait(10)->then(_ => {
+      t->equal(state.contents, 1, "parallel 2 should have incremented by now")
+      state.contents = state.contents + 1
+      t->equal(state.contents, 2, "parallel 1 should increment")
+      done()
+    })
+  })
+
+  t->test("parallel 2", t => {
+    t->equal(state.contents, 0, "parallel 2 should be the first to increment")
+    state.contents = state.contents + 1
+    t->equal(state.contents, 1, "parallel 2 should increment")
+    done()
+  })
+
+  t->test("parallel 3", t => {
+    wait(20)->Promise.then(_ => {
+      t->equal(state.contents, 2, "parallel 1 and 2 should have incremented by now")
+      state.contents = state.contents + 1
+      t->equal(state.contents, 3, "parallel 3 should increment last")
+      done()
+    })
+  })
+  done()
+})
+```
+
+This is the default and preferred test setup (zora and test) to take advantage of
+parallelism for speed. Note that you can combine parallel and blocking tests
+in the same `zora` or `zoraBlocking` block as well.
+
 ## Test runner
 
-You probably don't want to write a bunch of stand-alone test files,to be run
-with separate `node` commands, though. You can use any TAP compliant test
-runner ([see here](https://github.com/sindresorhus/awesome-tap) for a list),
-but your best bet is probably to use
-[zora-node](https://github.com/lorenzofox3/zora-node) (aka `pta`), with
+You probably don't want to run each of your test files using separate `node`
+commands, though. You can use any TAP compliant test runner ([see
+here](https://github.com/sindresorhus/awesome-tap) for a list), but your best
+bet is probably to use Zora's bundled
+[pta](https://github.com/lorenzofox3/zora/tree/master/pta) runner with
 [onchange](https://github.com/Qard/onchange) for watching for file changes:
 
 ```plaintext
@@ -178,77 +251,6 @@ Or, if you prefer to keep your tests alongside your code in your `src` folder:
 Now `npm test` will do what you expect: run a test runner and watch for file
 changes.
 
-Note that pta will *not* run the standalone tests, as it instead relies on a
-default export for each testing file. You can construct one for synchronous
-testing as follows:
-
-```rescript
-// simple.test.res
-open Zora
-
-let default: zoraTestBlock = t => {
-  t->block("should greet", t => {
-    t->ok(true, "hello world")
-  })
-
-  t->block("should answer question", t => {
-    let answer = 42
-    t->equal(answer, 42, "should be 42")
-  })
-}
-```
-
-But if you like things super fast, async is the way to go (Note: the `wait()` call
-below would require you to add a dependency on `@ryyppy/rescript-promise` to
-your bs-config):
-
-```rescript
-// parallel.test.res
-open Zora
-
-let wait = (amount: int) => {
-  Promise.make((resolve, _) => {
-    Js.Global.setTimeout(_ => {
-      resolve(. Js.undefined)
-    }, amount)->ignore
-  })
-}
-
-let default: zoraTestBlock = t => {
-  t->test("Some Parallel Tests", t => {
-    let state = ref(0)
-
-    t->test("parallel 1", t => {
-      wait(10)->then(_ => {
-        t->equal(state.contents, 1, "parallel 2 should have incremented by now")
-        state.contents = state.contents + 1
-        t->equal(state.contents, 2, "parallel 1 should increment")
-        done()
-      })
-    })
-
-    t->test("parallel 2", t => {
-      t->equal(state.contents, 0, "parallel 2 should be the first to increment")
-      state.contents = state.contents + 1
-      t->equal(state.contents, 1, "parallel 2 should increment")
-      done()
-    })
-
-    t->test("parallel 3", t => {
-      wait(20)->Promise.then(_ => {
-        t->equal(state.contents, 2, "parallel 1 and 2 should have incremented by now")
-        state.contents = state.contents + 1
-        t->equal(state.contents, 3, "parallel 3 should increment last")
-        done()
-      })
-    })
-    done()
-  })
-}
-```
-
-See [zora-node](https://github.com/lorenzofox3/zora-node) for some more fun
-suggestions to configure TAP logging or reporters.
 
 ## Skip, only, and fail
 
@@ -259,10 +261,11 @@ you're running blocking tests, replace `Zora.block` with `Zora.blockSkip`.
 For example:
 
 ```rescript
-// tests/skip.test.res
+
+
 open Zora
 
-let default: zoraTest = t => {
+zora("should skip some tests", t => {
   t->skip("broken test", t => {
     t->fail("Test is broken")
     done()
@@ -273,7 +276,7 @@ let default: zoraTest = t => {
   })
 
   done()
-}
+})
 ```
 
 The above also illustrates the use of the `Zora.fail` assertion to force a test
@@ -317,7 +320,7 @@ Rescript-specific assertions.
 //tests/assertions.test.res
 open Zora
 
-let default: zoraTest = t => {
+zora("Test assertions", t => {
   t->equal(42, 42, "Numbers are equal")
   t->notEqual(42, 43, "Numbers are not equal")
   let x = {"hello": "world"}
@@ -334,7 +337,7 @@ let default: zoraTest = t => {
   t->resultError(Belt.Result.Error(x), "Is Error Result")
   t->resultOk(Belt.Result.Ok(x), (t, n) => t->equal(n["hello"], "world", "Is Ok Result"))
   done()
-}
+})
 ```
 
 
