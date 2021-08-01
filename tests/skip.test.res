@@ -1,6 +1,6 @@
 open Zora
 
-let default: zoraTest = t => {
+zora("should skip some tests", t => {
   t->skip("broken test", t => {
     t->fail("Test is broken")
     done()
@@ -11,4 +11,4 @@ let default: zoraTest = t => {
   })
 
   done()
-}
+})
