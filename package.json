@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@ryyppy/rescript-promise": "^2.1.0",
-    "pta": "^0.2.3",
+    "pta": "^1.0.0",
     "zora": "^5.0.0"
   }
 }
