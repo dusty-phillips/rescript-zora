@@ -8,8 +8,8 @@
     "clean": "rescript clean",
     "build": "rescript build",
     "format": "rescript format -all",
-    "test": "pta 'tests/*.test.js'",
-    "test:watch": "npx onchange --initial '{tests,src}/*.js' -- pta 'tests/*.test.js'",
+    "test": "pta 'tests/*.test.mjs'",
+    "test:watch": "npx onchange --initial '{tests,src}/*.mjs' -- pta 'tests/*.test.mjs'",
     "watch": "rescript build -w"
   },
   "keywords": [
