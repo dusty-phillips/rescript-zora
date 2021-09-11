@@ -37,13 +37,20 @@ Add `@dusty-phillips/rescript-zora` as a dependency in your `bsconfig.json`:
 
 ## Suggested configuration
 
-I've only tested the package with es6-style modules, so you may want to add
-`"type": "module"` to your `package.json`.
+The promise library seems to behave best when using es6-style modules with a
+suffix of `.mjs`, so you'll probably want to add `type: module` to your
+`package.json`.
+
+**Note:** This "should" work with common-js, but I've had a devil of a time
+figuring out how to make it behave. Open to an PRs that make this more
+flexible.
+
 
 You'll probably also want to add the following `package-specs` configuration to
 your `bsconfig.json`:
 
 ```json
+  "suffix": ".mjs",
   "package-specs": {
     "module": "es6",
     "in-source": true
@@ -68,7 +75,8 @@ So a minimal `bsconfig.json` might look like this:
 ```json
 {
   "name": "myproject",
-  "version": "0.1.0",
+  "version": "2.0.0",
+  "suffix": ".mjs",
   "sources": [
     {
       "dir": "src",
