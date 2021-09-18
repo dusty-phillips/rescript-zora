@@ -37,14 +37,14 @@ Add `@dusty-phillips/rescript-zora` as a dependency in your `bsconfig.json`:
 
 ## Suggested configuration
 
-The promise library seems to behave best when using es6-style modules with a
-suffix of `.mjs`, so you'll probably want to add `type: module` to your
-`package.json`.
+Recent versions of node seem to cooperate better if you explicitly use the .mjs or
+.cjs suffix for your files. So you'll want your bsconfig to contain either:
 
-**Note:** This "should" work with common-js, but I've had a devil of a time
-figuring out how to make it behave. Open to an PRs that make this more
-flexible.
+* suffix: `.mjs` and module: `es6`
+* suffix: `.cjs` and module: `commonjs`
 
+I use .mjs in this configuration, but I have tested it with .cjs and it seems
+to work.
 
 You'll probably also want to add the following `package-specs` configuration to
 your `bsconfig.json`:

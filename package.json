@@ -3,7 +3,6 @@
   "version": "2.0.0",
   "description": "lightning-fast testing for a lightning-fast compiler",
   "repository": "github:dusty-phillips/rescript-zora",
-  "type": "module",
   "scripts": {
     "clean": "rescript clean",
     "build": "rescript build",
