@@ -7,7 +7,7 @@
     "clean": "rescript clean",
     "build": "rescript build",
     "format": "rescript format -all",
-    "test": "pta 'tests/*.test.mjs'",
+    "test": "pta --module-loader module 'tests/*.test.mjs'",
     "test:watch": "npx onchange --initial '{tests,src}/*.mjs' -- pta 'tests/*.test.mjs'",
     "watch": "rescript build -w"
   },
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@ryyppy/rescript-promise": "^2.1.0",
-    "pta": "^1.0.0",
-    "zora": "^5.0.0"
+    "pta": "^1.0.2",
+    "zora": "^5.0.3"
   }
 }
