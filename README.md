@@ -269,8 +269,6 @@ you're running blocking tests, replace `Zora.block` with `Zora.blockSkip`.
 For example:
 
 ```rescript
-
-
 open Zora
 
 zora("should skip some tests", t => {
@@ -291,14 +289,39 @@ The above also illustrates the use of the `Zora.fail` assertion to force a test
 to be always failing.
 
 If you want to run and debug a single test, you can run it in `only` mode. As
-with skip, change the test's name from `test` to `only` or `block to
-`blockOnly`.
+with skip, change the test's name from `test` to `only` or `block` to
+`blockOnly`. You must also change the top level `zora`/`zoraBlock` to
+`zoraOnly`/`zoraBlockOnly`.
+
+```rescript
+open Zora
+
+zoraOnly("should skip some tests", t => {
+  t->only("only run this test", t => {
+    t->ok(true, "Only working test")
+    done()
+  })
+
+  t->test("don't run this test", t => {
+    t->fail("Test is broken")
+    done()
+  })
+
+  done()
+})
+```
 
 However, `only` tests are intended only in development mode and zora will fail
 by default if you try to run one. To run in only mode, you can run:
 
 ```shell
 npm test -- --only
+```
+
+or 
+
+```shell
+ZORA_ONLY=true npm test
 ```
 
 If you use this feature a lot, you could also consider putting additional test

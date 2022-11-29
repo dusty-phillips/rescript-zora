@@ -6,6 +6,8 @@ type testMessage = string
 
 @module("zora") external zora: (string, zoraTest) => unit = "test"
 @module("zora") external zoraBlock: (string, zoraTestBlock) => unit = "test"
+@module("zora") external zoraOnly: (string, zoraTest) => unit = "only"
+@module("zora") external zoraBlockOnly: (string, zoraTestBlock) => unit = "only"
 
 @send external test: (t, testTitle, zoraTest) => unit = "test"
 @send external block: (t, testTitle, zoraTestBlock) => unit = "test"
