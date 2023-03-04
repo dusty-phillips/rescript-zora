@@ -10,13 +10,12 @@ default, though you can create blocking tests if you prefer.
 This package mostly just binds directly to Zora, but there are a couple
 niceties to help work with Rescript promises and the standard library.
 
-## Beta software alert
+## If you've used older versions of this package
 
-This package depends on the new
-[Promises](https://github.com/ryyppy/rescript-promise) proposal that hasn't
-been integrated into the Rescript standard library.
-
-I'm still tweaking the api a bit, so expect breakage.
+I've migrated everything to async/await syntax and it now requires
+Rescript 10.1. You'll need to convert any non-blocking tests in your
+existing codebase to return promise or define them with async, but
+you don't need to throw `done()` calls in all your async tests.
 
 ## Installation
 
@@ -40,8 +39,8 @@ Add `@dusty-phillips/rescript-zora` as a dependency in your `bsconfig.json`:
 Recent versions of node seem to cooperate better if you explicitly use the .mjs or
 .cjs suffix for your files. So you'll want your bsconfig to contain either:
 
-* suffix: `.mjs` and module: `es6`
-* suffix: `.cjs` and module: `commonjs`
+- suffix: `.mjs` and module: `es6`
+- suffix: `.cjs` and module: `commonjs`
 
 I use .mjs in this configuration, but I have tested it with .cjs and it seems
 to work.
@@ -106,7 +105,7 @@ zoraBlock("should run a test synchronously", t => {
 })
 ```
 
-Building this with rescript will output a `tests/simple.test.js` file that
+Building this with rescript will output a `tests/simple.mjs` file that
 you can run directly with `node`:
 
 ```tap
@@ -130,7 +129,7 @@ it works with Zora.
 
 ## Combining tests
 
-You can include multiple `zoraBlock` statemens, or you can pass the `t` value
+You can include multiple `zoraBlock` statements, or you can pass the `t` value
 into the `block` function:
 
 ```rescript
@@ -158,30 +157,23 @@ to run multiple independent tests in parallel:
 
 open Zora
 
-zora("should run a test asynchronously", t => {
+zora("should run a test asynchronously", async t => {
   let answer = 42
   t->equal(answer, 42, "Should answer the question")
-  done()
 })
 
-zora("should run a second test at the same time", t => {
+zora("should run a second test at the same time", async t => {
   let answer = 3.14
   t->equal(answer, 3.14, "Should be a tasty dessert")
-  done()
 })
 ```
 
-Note the absence of `zoraBlock`, and the presence of `done()`. Under the hood,
-this is returning a [Rescript
-Promise](https://github.com/ryyppy/rescript-promise), and you can call
-`Promise.then` and friends inside the test if necessary. The `done()` at the
-end is a more legible alias for `Promise.resolve` that is reexported in Zora.
-It is necessary because all promises in the rescript-promise library must
-return a promise.
+Note the absence of `zoraBlock`, and the presence of `async`. You can
+await other promises inside the test if you want.
 
 ## Combining parallel tests
 
-You can nest parallel tests inside a blocking or non-blocking test, and
+You can nest parallel async tests inside a blocking or non-blocking test, and
 run blocking tests alongside parallel tests:
 
 ```rescript
@@ -189,41 +181,36 @@ run blocking tests alongside parallel tests:
 open Zora
 
 let wait = (amount: int) => {
-  Promise.make((resolve, _) => {
+  Js.Promise2.make((~resolve, ~reject) => {
+    reject->ignore
     Js.Global.setTimeout(_ => {
       resolve(. Js.undefined)
     }, amount)->ignore
   })
 }
 
-zora("Some Parallel Tests", t => {
+zora("Some Parallel Tests", async t => {
   let state = ref(0)
 
-  t->test("parallel 1", t => {
-    wait(10)->then(_ => {
-      t->equal(state.contents, 1, "parallel 2 should have incremented by now")
-      state.contents = state.contents + 1
-      t->equal(state.contents, 2, "parallel 1 should increment")
-      done()
-    })
+  t->test("parallel 1", async t => {
+    {await wait(10)}-> ignore
+    t->equal(state.contents, 1, "parallel 2 should have incremented by now")
+    state.contents = state.contents + 1
+    t->equal(state.contents, 2, "parallel 1 should increment")
   })
 
-  t->test("parallel 2", t => {
+  t->test("parallel 2", async t => {
     t->equal(state.contents, 0, "parallel 2 should be the first to increment")
     state.contents = state.contents + 1
     t->equal(state.contents, 1, "parallel 2 should increment")
-    done()
   })
 
-  t->test("parallel 3", t => {
-    wait(20)->Promise.then(_ => {
-      t->equal(state.contents, 2, "parallel 1 and 2 should have incremented by now")
-      state.contents = state.contents + 1
-      t->equal(state.contents, 3, "parallel 3 should increment last")
-      done()
-    })
+  t->test("parallel 3", async t => {
+    {await wait(20)}->ignore
+    t->equal(state.contents, 2, "parallel 1 and 2 should have incremented by now")
+    state.contents = state.contents + 1
+    t->equal(state.contents, 3, "parallel 3 should increment last")
   })
-  done()
 })
 ```
 
@@ -259,7 +246,6 @@ Or, if you prefer to keep your tests alongside your code in your `src` folder:
 Now `npm test` will do what you expect: run a test runner and watch for file
 changes.
 
-
 ## Skip, only, and fail
 
 Zora exposes functions to skip tests if you need to. If you have a failing
@@ -274,14 +260,12 @@ open Zora
 zora("should skip some tests", t => {
   t->skip("broken test", t => {
     t->fail("Test is broken")
-    done()
   })
 
   t->blockSkip("also broken", t => {
     t->fail("Test is broken, too")
   })
 
-  done()
 })
 ```
 
@@ -299,15 +283,12 @@ open Zora
 zoraOnly("should skip some tests", t => {
   t->only("only run this test", t => {
     t->ok(true, "Only working test")
-    done()
   })
 
   t->test("don't run this test", t => {
     t->fail("Test is broken")
-    done()
   })
 
-  done()
 })
 ```
 
@@ -318,7 +299,7 @@ by default if you try to run one. To run in only mode, you can run:
 npm test -- --only
 ```
 
-or 
+or
 
 ```shell
 ZORA_ONLY=true npm test
@@ -334,18 +315,16 @@ for CI:
 "test:ci": "pta 'tests/*.test.js'",
 ```
 
-
 ## Assertions
 
 This library models all the default assertions provided by Zora except for
 those dealing with raising exceptions, which don't map neatly to Rescript
-exceptions.  There are additional bindings for checking if a Rescript `option`
+exceptions. There are additional bindings for checking if a Rescript `option`
 is `Some()` or `None` or if a `Belt.Result` is `Ok()` or `Error()` and asserting
 on the value therein.
 
 In the interest of avoiding bloat, I do not intend to add a lot of other
 Rescript-specific assertions.
-
 
 ```rescript
 //tests/assertions.test.res
@@ -367,10 +346,8 @@ zora("Test assertions", t => {
   t->optionSome(Some(x), (t, n) => t->equal(n["hello"], "world", "option should be hello world"))
   t->resultError(Belt.Result.Error(x), "Is Error Result")
   t->resultOk(Belt.Result.Ok(x), (t, n) => t->equal(n["hello"], "world", "Is Ok Result"))
-  done()
 })
 ```
-
 
 ## Running in the browser
 
@@ -392,5 +369,5 @@ PRs are welcome.
 
 This is for my reference
 
-* update the version in `bsconfig.json`
-* `npx np`
+- update the version in `bsconfig.json`
+- `npx np`
