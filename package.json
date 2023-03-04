@@ -1,6 +1,6 @@
 {
   "name": "@dusty-phillips/rescript-zora",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "lightning-fast testing for a lightning-fast compiler",
   "repository": "github:dusty-phillips/rescript-zora",
   "scripts": {
