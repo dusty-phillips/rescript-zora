@@ -4,7 +4,6 @@ import * as Zora from "zora";
 
 Zora.test("should run a test synchronously", (function (t) {
         t.equal(3.14, 3.14, "Should be a tasty dessert");
-        
       }));
 
 export {

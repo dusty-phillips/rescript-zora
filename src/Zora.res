@@ -1,5 +1,5 @@
 type t
-type zoraTest = t => Promise.t<unit>
+type zoraTest = t => promise<unit>
 type zoraTestBlock = t => unit
 type testTitle = string
 type testMessage = string
@@ -45,4 +45,3 @@ let resultOk = (zora: t, actual: Belt.Result.t<'a, 'b>, check: (t, 'a) => unit) 
   }
 }
 
-let {then, resolve: done} = module(Promise)

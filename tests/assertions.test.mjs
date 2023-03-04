@@ -4,7 +4,7 @@ import * as Zora from "../src/Zora.mjs";
 import * as Zora$1 from "zora";
 import * as Caml_option from "../node_modules/rescript/lib/es6/caml_option.js";
 
-Zora$1.test("Test assertions", (function (t) {
+Zora$1.test("Test assertions", (async function (t) {
         t.equal(42, 42, "Numbers are equal");
         t.notEqual(42, 43, "Numbers are not equal");
         var x = {
@@ -22,20 +22,17 @@ Zora$1.test("Test assertions", (function (t) {
         Zora.optionNone(t, undefined, "None is None");
         Zora.optionSome(t, Caml_option.some(x), (function (t, n) {
                 t.equal(n.hello, "world", "option should be hello world");
-                
               }));
         Zora.resultError(t, {
               TAG: /* Error */1,
               _0: x
             }, "Is Error Result");
-        Zora.resultOk(t, {
-              TAG: /* Ok */0,
-              _0: x
-            }, (function (t, n) {
-                t.equal(n.hello, "world", "Is Ok Result");
-                
-              }));
-        return Zora.done(undefined);
+        return Zora.resultOk(t, {
+                    TAG: /* Ok */0,
+                    _0: x
+                  }, (function (t, n) {
+                      t.equal(n.hello, "world", "Is Ok Result");
+                    }));
       }));
 
 export {

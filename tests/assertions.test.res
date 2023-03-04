@@ -1,6 +1,6 @@
 open Zora
 
-zora("Test assertions", t => {
+zora("Test assertions", async t => {
   t->equal(42, 42, "Numbers are equal")
   t->notEqual(42, 43, "Numbers are not equal")
   let x = {"hello": "world"}
@@ -16,5 +16,4 @@ zora("Test assertions", t => {
   t->optionSome(Some(x), (t, n) => t->equal(n["hello"], "world", "option should be hello world"))
   t->resultError(Belt.Result.Error(x), "Is Error Result")
   t->resultOk(Belt.Result.Ok(x), (t, n) => t->equal(n["hello"], "world", "Is Ok Result"))
-  done()
 })

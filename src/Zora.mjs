@@ -7,7 +7,6 @@ import * as Caml_option from "../node_modules/rescript/lib/es6/caml_option.js";
 
 function optionNone(zora, actual, message) {
   zora.ok(Belt_Option.isNone(actual), message);
-  
 }
 
 function optionSome(zora, actual, check) {
@@ -21,7 +20,6 @@ function optionSome(zora, actual, check) {
 
 function resultError(zora, actual, message) {
   zora.ok(Belt_Result.isError(actual), message);
-  
 }
 
 function resultOk(zora, actual, check) {
@@ -29,15 +27,6 @@ function resultOk(zora, actual, check) {
     return Curry._2(check, zora, actual._0);
   }
   zora.fail("Expected ok value, got error");
-  
-}
-
-function $$then(prim0, prim1) {
-  return prim0.then(Curry.__1(prim1));
-}
-
-function done(prim) {
-  return Promise.resolve(prim);
 }
 
 export {
@@ -45,8 +34,5 @@ export {
   optionSome ,
   resultError ,
   resultOk ,
-  $$then ,
-  done ,
-  
 }
 /* No side effect */
